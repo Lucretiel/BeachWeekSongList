@@ -51,7 +51,7 @@ export default React.createClass({
 	filteredSongs(songs) {
 		const searchMatcher = this.props.searchMatcher || (song => true)
 		const disabled = this.props.showDisabled ? (song => false) : (song => song.disabled)
-		const selectedId = this.selectedId
+		const selectedId = this.state.selectedId
 
 		return _.filter(songs, song =>
 			(song.id === selectedId || searchMatcher(song)) && !disabled(song))
@@ -76,7 +76,7 @@ export default React.createClass({
 	},
 
 	render() {
-		const songs = this.sortedSongs(this.capSongs(this.filteredSongs(this.props.songs)))
+		const songs = this.capSongs(this.sortedSongs(this.filteredSongs(this.props.songs)))
 
 		return (
 			<table className='table table-condensed table-striped table-bordered'>
