@@ -22,8 +22,8 @@ export default React.createClass({
 			'disabled-song': !selected && disabled,
 		})
 		return (
-			<tr className={className} onClick={event=>this.props.clickCb()}>
-				<td className="id-column">{this.props.idNumber}</td>
+			<tr className={className}>
+				<td className="id-column" onClick={event=>this.props.clickCb()}>{this.props.idNumber}</td>
 				<td className="data-column">{this.props.title}</td>
 				<td className="data-column">{this.props.artist}</td>
 				<td className="data-column">{this.props.source}</td>

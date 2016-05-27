@@ -33,7 +33,7 @@ export default React.createClass({
 	},
 
 	componentWillMount() {
-		this.updateSearchPeriodically = _.throttle(text => this.updateSearch(text), 500)
+		this.updateSearchPeriodically = _.debounce(text => this.updateSearch(text), 250)
 	},
 
 	setShowDisabled(showDisabled) {

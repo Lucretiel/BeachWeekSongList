@@ -57,17 +57,26 @@ export default React.createClass({
 			(song.id === selectedId || searchMatcher(song)) && !disabled(song))
 	},
 
-	//TODO: presort songs, in all 4 combinations
+	capSongs(songs) {
+		return _.first(songs, 100)
+	},
+
+	special_rank(song) {
+		const {sortReverse, selectedId} = this.state
+
+		const rank = song.id === selectedId ? 0 : song.disabled ? 2 : 1;
+		return sortReverse ? -rank : rank;
+	},
+
 	sortedSongs(songs) {
-		const column = this.state.sortColumn
-		const reversed = this.state.sortReverse
-		let sorted = _.sortBy(songs, song=>[song.disabled ? (reversed ? -1 : 1) : 0, song[column]])
-		if (reversed) sorted.reverse();
+		const {sortColumn, sortReverse} = this.state
+		let sorted = _.sortBy(songs, song=>[this.special_rank(song), song[sortColumn], song.id])
+		if (sortReverse) sorted.reverse();
 		return sorted;
 	},
 
 	render() {
-		const songs = this.sortedSongs(this.filteredSongs(this.props.songs))
+		const songs = this.sortedSongs(this.capSongs(this.filteredSongs(this.props.songs)))
 
 		return (
 			<table className='table table-condensed table-striped table-bordered'>

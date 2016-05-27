@@ -20,23 +20,23 @@ export default function SearchMatcher(text) {
 	const artistRegex = /^artist:\s*(([^\s].*)?)$/
 	const titleRegex = /^title:\s*(([^\s].*)?)$/
 
-	let match;
+	let regexMatch;
 
-	while((match = tokenRegex.exec(text)) !== null) {
-		let matchText = match[1] || match[2];
+	while((regexMatch = tokenRegex.exec(text)) !== null) {
+		let matchText = regexMatch[1] || regexMatch[2];
 
 		if (matchText) {
-			if ((match = artistRegex.exec(matchText)) !== null) {
-				if (match[2]) artists.push(match[2]);
-			} else if ((match = titleRegex.exec(matchText)) !== null) {
-				if (match[2]) titles.push(match[1]);
+			if ((regexMatch = artistRegex.exec(matchText)) !== null) {
+				if (regexMatch[2]) artists.push(regexMatch[2]);
+			} else if ((regexMatch = titleRegex.exec(matchText)) !== null) {
+				if (regexMatch[2]) titles.push(regexMatch[1]);
 			} else {
 				generics.push(matchText);
 			}
 		}
 	}
 
-	function makeMatcher(tokens, token_matcher) {
+	const makeMatcher = function(tokens, token_matcher) {
 		return tokens.length ?
 			song => _.all(tokens, token => token_matcher(song, token)) :
 			song => true;
@@ -49,7 +49,14 @@ export default function SearchMatcher(text) {
 	const title_matcher = makeMatcher(titles, (song, title) =>
 		song.title.includes(title))
 
-	return song => generic_matcher(song) && artist_matcher(song) && title_matcher(song)
+	return function(song) {
+		song = {
+			title: song.title.toLowerCase(),
+			artist: song.artist.toLowerCase(),
+		}
+
+		return generic_matcher(song) && artist_matcher(song) && title_matcher(song)
+	}
 }
 
 
