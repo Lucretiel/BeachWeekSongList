@@ -1,0 +1,32 @@
+.content {
+	max-width: 768px;
+	padding: 15px;
+	margin: 0 auto;
+}
+
+.title {
+	text-align: center
+}
+
+.search-interface {
+	Display:flex
+	Flex-direction:row
+}
+
+.sort-arrow{
+	display: block;
+	float: right;
+}
+
+.id-column {
+	white-space: nowrap;
+}
+
+.data-column {
+	width: 33%;
+}
+
+.disabled-song {
+	color: #555;
+	background-color: #333;
+}

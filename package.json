@@ -1,0 +1,44 @@
+{
+  "name": "beach-week-song-list",
+  "version": "1.0.0",
+  "description": "A simple, searchable list of songs for Beach Week Karaoke",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Lucretiel/BeachWeekSongList.git"
+  },
+  "author": "Nathan West",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/Lucretiel/BeachWeekSongList/issues"
+  },
+  "homepage": "https://github.com/Lucretiel/BeachWeekSongList#readme",
+  "devDependencies": {
+    "babel-core": "^6.9.0",
+    "babel-loader": "^6.2.4",
+    "babel-preset-es2015": "^6.9.0",
+    "babel-preset-react": "^6.5.0",
+    "bootstrap": "^3.3.6",
+    "bootstrap-webpack": "0.0.5",
+    "classnames": "^2.2.5",
+    "css-loader": "^0.6.3",
+    "exports-loader": "^0.6.2",
+    "extract-text-webpack-plugin": "^0.3.8",
+    "file-loader": "^0.8.1",
+    "html-webpack-plugin": "^2.17.0",
+    "imports-loader": "^0.6.3",
+    "jquery": "^2.2.4",
+    "json-loader": "^0.5.4",
+    "less-loader": "^0.6.2",
+    "react": "^15.1.0",
+    "react-dom": "^15.1.0",
+    "style-loader": "^0.6.0",
+    "underscore": "^1.8.3",
+    "url-loader": "^0.5.5",
+    "webpack": "^1.13.1"
+  }
+}

@@ -1,0 +1,14 @@
+[{
+	"title": "song1",
+	"artist": "artist1",
+	"id": 1234
+}, {
+	"title": "song2",
+	"artist": "artist1",
+	"id": 567
+}, {
+	"title": "song3",
+	"artist": "artist2",
+	"id": 9,
+	"disabled": true
+}]
