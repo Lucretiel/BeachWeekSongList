@@ -27,16 +27,6 @@ export default React.createClass({
 	getInitialState() {
 		return {
 			selectedId: null,
-			sortColumn: 'artist',
-			sortReverse: false
-		}
-	},
-
-	toggleSortFrom(column) {
-		if (this.state.sortColumn === column) {
-			this.setState({sortReverse: !this.state.sortReverse})
-		} else {
-			this.setState({sortColumn: column, sortReverse: false})
 		}
 	},
 
@@ -61,31 +51,14 @@ export default React.createClass({
 		return _.first(songs, 100)
 	},
 
-	special_rank(song) {
-		const {sortReverse, selectedId} = this.state
-
-		const rank = song.id === selectedId ? 0 : song.disabled ? 2 : 1;
-		return sortReverse ? -rank : rank;
-	},
-
-	sortedSongs(songs) {
-		const {sortColumn, sortReverse} = this.state
-		let sorted = _.sortBy(songs, song=>[this.special_rank(song), song[sortColumn], song.id])
-		if (sortReverse) sorted.reverse();
-		return sorted;
-	},
 
 	render() {
-		const songs = this.capSongs(this.sortedSongs(this.filteredSongs(this.props.songs)))
+		const songs = this.capSongs(this.filteredSongs(this.props.songs))
 
 		return (
 			<table className='table table-condensed table-striped table-bordered'>
 				<thead>
-					<SongHeaders
-						sortColumn={this.state.sortColumn}
-						reverse={this.state.sortReverse}
-						reSortCb={column => this.toggleSortFrom(column)}
-					/>
+					<SongHeaders/>
 				</thead>
 				<tbody>
 					{_.map(songs, song =>
