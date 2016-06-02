@@ -14,7 +14,7 @@ dist/bundle.js: $(SRC_FILES) src/data/songlist.json webpack.config.js package.js
 dist.prod:
 	git clone http://github.com/Lucretiel/BeachWeekSongList dist.prod -b gh-pages --single-branch
 
-dist.prod/bundle.js: $(SRC_FILES) src/data/songlist.json webpack.config.prod.js package.json dist.prod
+dist.prod/bundle.js: $(SRC_FILES) src/data/songlist.json webpack.config.js webpack.config.prod.js package.json dist.prod
 	./node_modules/webpack/bin/webpack.js -p --devtool source-map --config webpack.config.prod.js
 
 src/data:
