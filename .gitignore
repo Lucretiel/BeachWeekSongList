@@ -35,7 +35,10 @@ node_modules
 # Builds
 dist
 dist.prod
-src/songlist.json
+src/data
 
 # Autosaves
 *~
+
+# Virtual env
+env
