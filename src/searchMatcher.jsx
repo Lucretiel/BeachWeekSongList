@@ -36,27 +36,28 @@ export default function SearchMatcher(text) {
 		}
 	}
 
-	const makeMatcher = function(tokens, token_matcher) {
+	const makeMatcher = function(tokens, token_matcher, prev_matcher=null) {
 		return tokens.length ?
-			song => _.all(tokens, token => token_matcher(song, token)) :
-			song => true;
+			prev_matcher === null ?
+				song => _.all(tokens, token => token_matcher(song, token)) :
+				song => prev_matcher(song) && _.all(tokens, token => token_matcher(song, token)) :
+			prev_matcher
 	}
 
-	const generic_matcher = makeMatcher(generics, (song, blob) =>
-		song.title.includes(blob) || song.artist.includes(blob))
-	const artist_matcher = makeMatcher(artists, (song, artist) =>
-		song.artist.includes(artist))
-	const title_matcher = makeMatcher(titles, (song, title) =>
-		song.title.includes(title))
+	let matcher = null
+	matcher = makeMatcher(generics, ((song, blob) =>
+		song.title.includes(blob) || song.artist.includes(blob)), matcher)
+	matcher = makeMatcher(artists, ((song, artist) =>
+		song.artist.includes(artist)), matcher)
+	matcher = makeMatcher(titles, ((song, title) =>
+		song.title.includes(title)), matcher)
 
-	return function(song) {
-		song = {
+	return matcher === null ?
+		(song => true) :
+		song => matcher({
 			title: song.title.toLowerCase(),
 			artist: song.artist.toLowerCase(),
-		}
-
-		return generic_matcher(song) && artist_matcher(song) && title_matcher(song)
-	}
+		})
 }
 
 

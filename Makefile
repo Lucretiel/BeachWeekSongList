@@ -2,8 +2,11 @@ dev: dist/bundle.js
 
 prod: dist.prod/bundle.js
 
-SRC_FILES = $(shell find src -type f -iname '*.jsx')
+SRC_FILES = $(shell find src -type f -iname '*.jsx') ./src/style.css
 MUSIC_FILES = $(shell find songs -type f -iname '*.xml')
+
+clean:
+	rm -rf src/data dist dist.prod
 
 dist/bundle.js: $(SRC_FILES) src/data/songlist.json webpack.config.js package.json
 	./node_modules/webpack/bin/webpack.js -d --config webpack.config.js

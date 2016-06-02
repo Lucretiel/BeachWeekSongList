@@ -8,6 +8,11 @@
 	text-align: center
 }
 
+.loading {
+	text-align: center;
+	font-size: 16pt;
+}
+
 .search-interface {
 	Display:flex
 	Flex-direction:row

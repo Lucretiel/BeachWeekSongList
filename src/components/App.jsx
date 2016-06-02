@@ -9,20 +9,11 @@ import SearchMatcher from '../searchMatcher.jsx'
 const {string, number, arrayOf, shape, bool} = React.PropTypes
 
 export default React.createClass({
-	propTypes: {
-		songs: arrayOf(
-			shape({
-				title: string.isRequired,
-				artist: string.isRequired,
-				id: number.isRequired,
-				source: string,
-				disabled: bool,
-			}).isRequired
-		).isRequired
-	},
+	propTypes: {},
 
 	getInitialState() {
 		return {
+			songs: null,
 			searchMatcher: null,
 			showDisabled: false,
 		}
@@ -36,11 +27,25 @@ export default React.createClass({
 		this.updateSearchPeriodically = _.debounce(text => this.updateSearch(text), 100)
 	},
 
+	componentDidMount() {
+		require(["../data/songlist.json"], songs => {
+			this.setState({songs: songs})
+		})
+	},
+
 	setShowDisabled(showDisabled) {
 		this.setState({showDisabled: showDisabled})
 	},
 
 	render() {
+		const songlist = this.state.songs === null ?
+			<div className="loading">Loading song list...</div> :
+			<SongList
+						songs={this.state.songs}
+						searchMatcher={this.state.searchMatcher}
+						showDisabled={this.state.showDisabled}
+			/>
+
 		return (
 			<div className="container-fluid content">
 				<h1 className="title">Beach Week Karaoke Song List</h1>
@@ -60,11 +65,7 @@ export default React.createClass({
 					</form>
 				</div>
 				<div className="row">
-					<SongList
-						songs={this.props.songs}
-						searchMatcher={this.state.searchMatcher}
-						showDisabled={this.state.showDisabled}
-					/>
+					{songlist}
 				</div>
 			</div>
 		);
