@@ -9,6 +9,7 @@ module.exports = {
 	plugins: [
 		new HtmlWebpackPlugin({
 			title: "Beach Week Karaoke Song Finder",
+			favicon: "./favicon.png"
 		}),
 		new webpack.ProvidePlugin({
 			$: "jquery",

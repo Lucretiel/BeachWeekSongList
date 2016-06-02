@@ -2,7 +2,7 @@ dev: dist/bundle.js
 
 prod: dist.prod/bundle.js
 
-SRC_FILES = $(shell find src -type f -iname '*.jsx') ./src/style.css
+SRC_FILES = $(shell find src -type f -iname '*.jsx') ./src/style.css ./favicon.png
 MUSIC_FILES = $(shell find songs -type f -iname '*.xml')
 
 clean:
@@ -11,7 +11,10 @@ clean:
 dist/bundle.js: $(SRC_FILES) src/data/songlist.json webpack.config.js package.json
 	./node_modules/webpack/bin/webpack.js -d --config webpack.config.js
 
-dist.prod/bundle.js: $(SRC_FILES) src/data/songlist.json webpack.config.prod.js package.json
+dist.prod:
+	git clone http://github.com/Lucretiel/BeachWeekSongList dist.prod -b gh-pages --single-branch
+
+dist.prod/bundle.js: $(SRC_FILES) src/data/songlist.json webpack.config.prod.js package.json dist.prod
 	./node_modules/webpack/bin/webpack.js -p --devtool source-map --config webpack.config.prod.js
 
 src/data:
