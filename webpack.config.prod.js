@@ -1,5 +1,6 @@
 var webpack = require('webpack')
 var config = require("./webpack.config.js")
+const validate = require('webpack-validator')
 
 config.output.path = "dist.prod"
 config.plugins.push(
@@ -8,4 +9,4 @@ config.plugins.push(
 	})
 )
 
-module.exports = config
+module.exports = validate(config)

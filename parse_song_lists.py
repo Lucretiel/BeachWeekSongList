@@ -2,15 +2,14 @@ import plistlib
 import re
 import sys
 import json
+import argparse
 from collections import namedtuple
-from functools import wraps
 from os import path
-
-from autocommand import autocommand
 
 
 def message(*args, **kwargs):
     print(*args, file=sys.stderr, flush=True, **kwargs)
+
 
 artist_title_matchers = [
     re.compile(r"^.* - (?P<artist>.*) - (?P<title>.*)$"),
@@ -32,7 +31,8 @@ def load_music_file(filename):
 Song = namedtuple('Song', 'title artist id disabled source')
 
 
-class ParseError(Exception): pass
+class ParseError(Exception):
+    pass
 
 
 def check_bad_title(title, artist):
@@ -88,11 +88,9 @@ def extract_song(item, need_strm, source):
 def extract_file(filename, special):
     data = load_music_file(filename)
     source = path.basename(filename)
-    playlists = data['Playlists']
 
-    for playlist in playlists:
-        items = playlist['Playlist Items']
-        for item in items:
+    for playlist in data['Playlists']:
+        for item in playlist['Playlist Items']:
             try:
                 song = extract_song(item, special, source)
             except ParseError:
@@ -101,8 +99,8 @@ def extract_file(filename, special):
                 yield song
 
 
-def extract_all(special_file, files):
-    if special_file is not None:
+def extract_all(special_files, files):
+    for special_file in special_files:
         yield from extract_file(special_file, True)
 
     for normal_file in files:
@@ -115,21 +113,55 @@ def filter_extracted_songs(songs, dedup):
     else:
         key = lambda song: song.id
 
-    seen = {}
+    seen = set()
 
     for song in songs:
         k = key(song)
         if k not in seen:
             yield song
-            seen[k] = song
-        else:
-            message("Ignored duplicate song\n\tOriginal: {}\n\tDuplicate:{}".format(seen[k], song))
+            seen.add(k)
 
 
-@autocommand(__name__)
-def main(special_file=None, deduplicate=False, *files):
-    songs = extract_all(special_file, files)
-    songs = filter_extracted_songs(songs, deduplicate)
-    songs = [song._asdict() for song in songs]
-    json.dump(songs, sys.stdout)
-    message("Song list parsed: found {} songs".format(len(songs)))
+def write_iterable_json(it, ostr):
+    '''
+    This function sequentially writes an iterable as a json list, without
+    requiring it to be unrolled into a full list first.
+    '''
+    it = iter(it)
+    dump = json.dump
+    write = ostr.write
+    write('[')
+
+    count = 0
+
+    try:
+        dump(next(it), ostr)
+        count += 1
+    except StopIteration:
+        pass
+
+    for thing in it:
+        write(',')
+        dump(thing, ostr)
+        count += 1
+
+    write(']')
+    return count
+
+
+parser = argparse.ArgumentParser()
+parser.add_argument('-s', '--strm-file', action='append')
+parser.add_argument('-f', '--normal-file', action='append')
+parser.add_argument('-d', '--deduplicate', action='store_true')
+
+
+def main():
+    args = parser.parse_args()
+    songs = extract_all(args.strm_file, args.normal_file)
+    songs = filter_extracted_songs(songs, args.deduplicate)
+    songs = map(Song._asdict, songs)
+    count = write_iterable_json(songs, sys.stdout)
+    message("Song list parsed: found {} songs".format(count))
+
+if __name__ == '__main__':
+    main()

@@ -1,6 +1,9 @@
-var HtmlWebpackPlugin = require('html-webpack-plugin');
-var webpack = require('webpack')
-module.exports = {
+const webpack = require('webpack')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+const LodashModuleReplacementPlugin = require('lodash-webpack-plugin')
+const validate = require('webpack-validator')
+
+module.exports = validate({
 	entry: './src/main.jsx',
 	output: {
 		path: 'dist',
@@ -14,7 +17,8 @@ module.exports = {
 		new webpack.ProvidePlugin({
 			$: "jquery",
 			jQuery: "jquery"
-		})
+		}),
+		new LodashModuleReplacementPlugin(),
 	],
 	module: {
 		loaders: [{
@@ -22,13 +26,15 @@ module.exports = {
 			loader: 'json'
 		}, {
 			test: /\.jsx$/,
-			loader: 'babel-loader',
+			loader: 'babel',
 			query: {
+				plugins: ['lodash'],
 				presets: ['es2015', 'react']
 			}
+		}, {
+			test: /\.css$/,
+			loader: "style!css"
 		},
-
-		{ test: /\.css$/, loader: "style-loader!css-loader" },
 
 		// Bootstrap loaders
 		{test: /\.woff2?(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?limit=10000&mimetype=application/font-woff'},
@@ -36,4 +42,4 @@ module.exports = {
 		{test: /\.eot(\?v=\d+\.\d+\.\d+)?$/, loader: 'file'},
 		{test: /\.svg(\?v=\d+\.\d+\.\d+)?$/, loader: 'url?limit=10000&mimetype=image/svg+xml'}]
 	}
-}
+})

@@ -1,6 +1,6 @@
 "use strict"
 
-import _ from "underscore"
+import _ from "lodash"
 import React from "react"
 import SongHeaders from "./SongHeaders.jsx"
 import SongRow from "./SongRow.jsx"

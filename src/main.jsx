@@ -1,6 +1,5 @@
 "use strict";
 
-import "bootstrap"
 import "bootstrap-webpack"
 import "./style.css"
 

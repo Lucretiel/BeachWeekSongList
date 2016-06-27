@@ -1,4 +1,4 @@
-import _ from 'underscore'
+import _ from 'lodash';
 
 export default function SearchMatcher(text) {
 	text = text.trim().toLowerCase()
@@ -39,8 +39,8 @@ export default function SearchMatcher(text) {
 	const makeMatcher = function(tokens, token_matcher, prev_matcher=null) {
 		return tokens.length ?
 			prev_matcher === null ?
-				song => _.all(tokens, token => token_matcher(song, token)) :
-				song => prev_matcher(song) && _.all(tokens, token => token_matcher(song, token)) :
+				song => _.every(tokens, token => token_matcher(song, token)) :
+				song => prev_matcher(song) && _.every(tokens, token => token_matcher(song, token)) :
 			prev_matcher
 	}
 
