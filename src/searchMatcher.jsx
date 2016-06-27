@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import all from 'lodash.every'
 
 export default function SearchMatcher(text) {
 	text = text.trim().toLowerCase()
@@ -39,8 +39,8 @@ export default function SearchMatcher(text) {
 	const makeMatcher = function(tokens, token_matcher, prev_matcher=null) {
 		return tokens.length ?
 			prev_matcher === null ?
-				song => _.every(tokens, token => token_matcher(song, token)) :
-				song => prev_matcher(song) && _.every(tokens, token => token_matcher(song, token)) :
+				song => all(tokens, token => token_matcher(song, token)) :
+				song => prev_matcher(song) && all(tokens, token => token_matcher(song, token)) :
 			prev_matcher
 	}
 
@@ -53,7 +53,7 @@ export default function SearchMatcher(text) {
 		song.title.includes(title)), matcher)
 
 	return matcher === null ?
-		(song => true) :
+		song => true :
 		song => matcher({
 			title: song.title.toLowerCase(),
 			artist: song.artist.toLowerCase(),

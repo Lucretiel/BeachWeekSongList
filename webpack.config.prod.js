@@ -1,12 +1,13 @@
-var webpack = require('webpack')
-var config = require("./webpack.config.js")
+const webpack = require('webpack')
+const config = require("./webpack.config.js")
+const merge = require('webpack-merge')
 const validate = require('webpack-validator')
 
-config.output.path = "dist.prod"
-config.plugins.push(
-	new webpack.DefinePlugin({
-		'process.env.NODE_ENV': '"production"'
-	})
-)
-
-module.exports = validate(config)
+module.exports = validate(merge(config, {
+	output: {path: "dist.prod"},
+	plugins: [
+		new webpack.DefinePlugin({
+			'process.env.NODE_ENV': '"production"'
+		})
+	]
+}))

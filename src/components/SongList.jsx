@@ -1,6 +1,8 @@
 "use strict"
 
-import _ from "lodash"
+import map from "lodash.map"
+import filter from "lodash.filter"
+import first from "lodash.first"
 import React from "react"
 import SongHeaders from "./SongHeaders.jsx"
 import SongRow from "./SongRow.jsx"
@@ -43,12 +45,12 @@ export default React.createClass({
 		const disabled = this.props.showDisabled ? (song => false) : (song => song.disabled)
 		const selectedId = this.state.selectedId
 
-		return _.filter(songs, song =>
+		return filter(songs, song =>
 			(song.id === selectedId || searchMatcher(song)) && !disabled(song))
 	},
 
 	capSongs(songs) {
-		return _.first(songs, 100)
+		return first(songs, 100)
 	},
 
 
@@ -61,7 +63,7 @@ export default React.createClass({
 					<SongHeaders/>
 				</thead>
 				<tbody>
-					{_.map(songs, song =>
+					{map(songs, song =>
 						<SongRow
 							key={song.id}
 							title={song.title}

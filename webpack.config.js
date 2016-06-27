@@ -1,6 +1,5 @@
 const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-const LodashModuleReplacementPlugin = require('lodash-webpack-plugin')
 const validate = require('webpack-validator')
 
 module.exports = validate({
@@ -17,8 +16,7 @@ module.exports = validate({
 		new webpack.ProvidePlugin({
 			$: "jquery",
 			jQuery: "jquery"
-		}),
-		new LodashModuleReplacementPlugin(),
+		})
 	],
 	module: {
 		loaders: [{
@@ -28,7 +26,6 @@ module.exports = validate({
 			test: /\.jsx$/,
 			loader: 'babel',
 			query: {
-				plugins: ['lodash'],
 				presets: ['es2015', 'react']
 			}
 		}, {

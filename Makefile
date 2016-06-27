@@ -20,20 +20,21 @@ dist/bundle.js: $(SRC_FILES) \
 dist.prod:
 	git clone http://github.com/Lucretiel/BeachWeekSongList dist.prod -b gh-pages --single-branch
 
+webpack.config.prod.js: webpack.config.js
+
 dist.prod/bundle.js: $(SRC_FILES) \
 	src/data/songlist.json \
-	webpack.config.js \
 	webpack.config.prod.js \
 	package.json \
-	dist.prod \
-	node_modules
+	node_modules \
+	dist.prod
 
 	$(WEBPACK) -p --devtool source-map --config webpack.config.prod.js
 
 src/data:
 	mkdir src/data
 
-src/data/songlist.json: $(MUSIC_FILES) parse_song_lists.py src/data
+src/data/songlist.json: $(MUSIC_FILES) parse_song_lists.py | src/data
 	python3 parse_song_lists.py -d \
 		-s songs/TriceraSoft.xml \
 		-f songs/Library.xml \
@@ -41,8 +42,10 @@ src/data/songlist.json: $(MUSIC_FILES) parse_song_lists.py src/data
 		> src/data/songlist.json.temp
 	mv src/data/songlist.json.temp src/data/songlist.json
 
-node_modules:
+node_modules: package.json
 	npm install
+	npm prune
+	touch -ma node_modules
 
 clean:
 	rm -rf src/data dist dist.prod

@@ -1,6 +1,6 @@
 "use strict"
 
-import _ from 'lodash'
+import debounce from 'lodash.debounce'
 import React from 'react'
 import SearchBar from './SearchBar.jsx'
 import SongList from './SongList.jsx'
@@ -24,7 +24,7 @@ export default React.createClass({
 	},
 
 	componentWillMount() {
-		this.updateSearchPeriodically = _.debounce(text => this.updateSearch(text), 100)
+		this.updateSearchPeriodically = debounce(text => this.updateSearch(text), 100)
 	},
 
 	componentDidMount() {
