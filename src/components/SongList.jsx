@@ -2,7 +2,7 @@
 
 import map from "lodash.map"
 import filter from "lodash.filter"
-import first from "lodash.first"
+import take from "lodash.take"
 import React from "react"
 import SongHeaders from "./SongHeaders.jsx"
 import SongRow from "./SongRow.jsx"
@@ -50,7 +50,7 @@ export default React.createClass({
 	},
 
 	capSongs(songs) {
-		return first(songs, 100)
+		return take(songs, 100)
 	},
 
 
