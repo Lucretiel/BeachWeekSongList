@@ -52,3 +52,4 @@ clean:
 
 megaclean: clean
 	rm -rf node_modules
+	@echo "Removed node_modules. If you are STILL having problems, try removing your node cache."

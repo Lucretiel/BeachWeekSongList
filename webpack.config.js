@@ -26,7 +26,9 @@ module.exports = validate({
 			test: /\.jsx$/,
 			loader: 'babel',
 			query: {
-				presets: ['es2015', 'react']
+				// TODO: fix this yelling about require, document, etc.s
+				// plugins: ["undeclared-variables-check"],
+				presets: ['es2015', 'react', 'stage-2']
 			}
 		}, {
 			test: /\.css$/,

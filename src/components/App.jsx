@@ -2,72 +2,41 @@
 
 import debounce from 'lodash.debounce'
 import React from 'react'
-import SearchBar from './SearchBar.jsx'
+import { connect } from 'react-redux'
+
+import mapSelectorsToProps from '../mapSelectorsToProps.jsx'
+import Interface from './Interface.jsx'
 import SongList from './SongList.jsx'
-import SearchMatcher from '../searchMatcher.jsx'
+import { haveSongsSelector } from '../store/selectors.jsx'
 
 const {string, number, arrayOf, shape, bool} = React.PropTypes
 
-export default React.createClass({
-	propTypes: {},
-
-	getInitialState() {
-		return {
-			songs: null,
-			searchMatcher: null,
-			showDisabled: false,
-		}
-	},
-
-	updateSearch(text) {
-		this.setState({searchMatcher: SearchMatcher(text)})
-	},
-
-	componentWillMount() {
-		this.updateSearchPeriodically = debounce(text => this.updateSearch(text), 100)
-	},
-
-	componentDidMount() {
-		require(["../data/songlist.json"], songs => {
-			this.setState({songs: songs})
-		})
-	},
-
-	setShowDisabled(showDisabled) {
-		this.setState({showDisabled: showDisabled})
+const App = React.createClass({
+	propTypes: {
+		haveSongs: bool.isRequired
 	},
 
 	render() {
-		const songlist = this.state.songs === null ?
-			<div className="loading">Loading song list...</div> :
-			<SongList
-						songs={this.state.songs}
-						searchMatcher={this.state.searchMatcher}
-						showDisabled={this.state.showDisabled}
-			/>
+		const songlist = this.props.haveSongs ?
+			<SongList /> :
+			<div className="loading">
+				Loading song list...
+			</div>
 
 		return (
 			<div className="container-fluid content">
 				<h1 className="title">Beach Week Karaoke Song List</h1>
-				<div className="row search-interface">
-					<form>
-						<div className="form-group">
-							<SearchBar updateHandler={text=>this.updateSearchPeriodically(text)} />
-						</div>
-						<div className="form-group">
-							<div className="checkbox">
-								<label>
-									<input type="checkbox" onChange={event=>this.setShowDisabled(event.target.checked)} />
-									Show nonfree
-								</label>
-							</div>
-						</div>
-					</form>
+				<div className="row">
+					<Interface />
 				</div>
 				<div className="row">
 					{songlist}
 				</div>
 			</div>
-		);
+		)
 	}
-});
+})
+
+export default connect(
+	mapSelectorsToProps({ haveSongs: haveSongsSelector })
+)(App)

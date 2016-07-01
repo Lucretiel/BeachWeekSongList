@@ -3,7 +3,7 @@ import all from 'lodash.every'
 export default function SearchMatcher(text) {
 	text = text.trim().toLowerCase()
 	if (text === "") {
-		return song => true;
+		return null;
 	}
 
 	/*
@@ -52,8 +52,7 @@ export default function SearchMatcher(text) {
 	matcher = makeMatcher(titles, ((song, title) =>
 		song.title.includes(title)), matcher)
 
-	return matcher === null ?
-		song => true :
+	return matcher === null ? null :
 		song => matcher({
 			title: song.title.toLowerCase(),
 			artist: song.artist.toLowerCase(),

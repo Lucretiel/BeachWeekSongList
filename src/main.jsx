@@ -3,11 +3,27 @@
 import "bootstrap-webpack"
 import "./style.css"
 
-import ReactDOM from "react-dom"
 import React from "react"
-import App from "./components/App.jsx"
+import { render } from "react-dom"
+import { createStore } from 'redux'
+import { Provider } from 'react-redux'
 
-(function(root) {
-	document.body.appendChild(root);
-	ReactDOM.render(<App/>, root);
-})(document.createElement('div'));
+import App from "./components/App.jsx"
+import rootReducer from "./store/reducers.jsx"
+import { addSongs } from "./store/actions.jsx"
+
+(() => {
+	let store = createStore(rootReducer)
+
+	require(["./data/songlist.json"], songs => {
+		store.dispatch(addSongs(songs))
+	})
+
+	render(
+		<Provider store={store}>
+			<App/>
+		</Provider>,
+		document.body.appendChild(
+			document.createElement('div')))
+})()
+
