@@ -5,15 +5,6 @@ A simple, searchable list of songs for Beach Week Karaoke
 
 ### Some useful commands
 
-- Build for development: `./node_modules/webpack/bin/webpack.js -d --config webpack.config.js`
-- Build for production: `./node_modules/webpack/bin/webpack.js -p --config webpack.config.prod.js`
-- Build for continuous development:
-
-```
-fswatch -0 src/ package.json webpack.config.js | while read -z event
-    echo -s (set_color -b yellow) $event (set_color normal)
-    ./node_modules/webpack/bin/webpack.js
-end
-```
-
-- Build music files: `python3 parse_song_lists.py -s songs/TriceraSoft.xml songs/Library.xml songs/KaraokeCloud.xml > src/songlist.json`
+- Build for development: `make dev`
+- Build for production: `make prod`
+  - Note that this does a clone of this repo's gh-pages branch to build the site into
