@@ -36,13 +36,12 @@ export default function SearchMatcher(text) {
 		}
 	}
 
-	const makeMatcher = function(tokens, token_matcher, prev_matcher=null) {
-		return tokens.length ?
+	const makeMatcher = (tokens, token_matcher, prev_matcher=null) =>
+		tokens.length ?
 			prev_matcher === null ?
 				song => all(tokens, token => token_matcher(song, token)) :
 				song => prev_matcher(song) && all(tokens, token => token_matcher(song, token)) :
 			prev_matcher
-	}
 
 	let matcher = null
 	matcher = makeMatcher(generics, ((song, blob) =>
