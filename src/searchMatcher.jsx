@@ -1,4 +1,5 @@
 import all from 'lodash.every'
+import flow from 'lodash.flow'
 
 export default function SearchMatcher(text) {
 	text = text.trim().toLowerCase()
@@ -36,24 +37,26 @@ export default function SearchMatcher(text) {
 		}
 	}
 
-	const makeMatcher = (tokens, token_matcher, prev_matcher=null) =>
+	const makeMatcher = (tokens, token_matcher) => prev_matcher =>
 		tokens.length ?
 			prev_matcher === null ?
 				(title, artist) => all(tokens, token => token_matcher(title, artist, token)) :
 				(title, artist) => prev_matcher(title, artist) && all(tokens, token => token_matcher(title, artist, token)) :
 			prev_matcher
 
-	let matcher = null
-	matcher = makeMatcher(generics, ((title, artist, blob) =>
-		title.includes(blob) || artist.includes(blob)), matcher)
-	matcher = makeMatcher(artists, ((title, artist, blob) =>
-		artist.includes(blob)), matcher)
-	matcher = makeMatcher(titles, ((title, artist, blob) =>
-		title.includes(blob)), matcher)
+	if (generics.length + artists.length + titles.length === 0) {
+		return song => true
+	}
 
-	return matcher === null ?
-		song => true :
-		song => matcher(song.title.toLowerCase(), song.artist.toLowerCase())
+	return flow(
+		makeMatcher(generics,
+			(title, artist, blob) => title.includes(blob) || artist.includes(blob)),
+		makeMatcher(artists,
+			(title, artist, blob) => artist.includes(blob)),
+		makeMatcher(titles,
+			(title, artist, blob) => title.includes(blob)),
+		matcher => song => matcher(song.title.toLowerCase(), song.artist.toLowerCase())
+	)(null)
 }
 
 

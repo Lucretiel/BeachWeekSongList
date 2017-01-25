@@ -1,4 +1,4 @@
-.PHONY: dev prod clean megaclean
+.PHONY: dev prod clean nodeclean megaclean
 
 SRC_FILES = $(shell find src -type f -iname '*.jsx') ./src/style.css ./favicon.png
 MUSIC_FILES = $(shell find songs -type f -iname '*.xml')
@@ -50,5 +50,7 @@ node_modules: package.json
 clean:
 	rm -rf src/data dist dist.prod
 
-megaclean: clean
+nodeclean:
 	rm -rf node_modules
+
+megaclean: clean nodeclean
