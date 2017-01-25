@@ -39,24 +39,21 @@ export default function SearchMatcher(text) {
 	const makeMatcher = (tokens, token_matcher, prev_matcher=null) =>
 		tokens.length ?
 			prev_matcher === null ?
-				song => all(tokens, token => token_matcher(song, token)) :
-				song => prev_matcher(song) && all(tokens, token => token_matcher(song, token)) :
+				(title, artist) => all(tokens, token => token_matcher(title, artist, token)) :
+				(title, artist) => prev_matcher(title, artist) && all(tokens, token => token_matcher(title, artist, token)) :
 			prev_matcher
 
 	let matcher = null
-	matcher = makeMatcher(generics, ((song, blob) =>
-		song.title.includes(blob) || song.artist.includes(blob)), matcher)
-	matcher = makeMatcher(artists, ((song, artist) =>
-		song.artist.includes(artist)), matcher)
-	matcher = makeMatcher(titles, ((song, title) =>
-		song.title.includes(title)), matcher)
+	matcher = makeMatcher(generics, ((title, artist, blob) =>
+		title.includes(blob) || artist.includes(blob)), matcher)
+	matcher = makeMatcher(artists, ((title, artist, blob) =>
+		artist.includes(blob)), matcher)
+	matcher = makeMatcher(titles, ((title, artist, blob) =>
+		title.includes(blob)), matcher)
 
 	return matcher === null ?
 		song => true :
-		song => matcher({
-			title: song.title.toLowerCase(),
-			artist: song.artist.toLowerCase(),
-		})
+		song => matcher(song.title.toLowerCase(), song.artist.toLowerCase())
 }
 
 
